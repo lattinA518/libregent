@@ -1,10 +1,10 @@
 # libregent
 
-A C++20 library for rule-based syntactic text simplification, based on the RegenT system by Siddharthan et al.
+A C++20 library for rule-based syntactic text simplification, based on the RegenT system.
 
 #### Why does this exist?
 
-Siddharthan proved it works. Nobody compiled it. Here's some C++ and a makefile.
+Siddharthan et al. proved it works. Nobody compiled it. Here's some C++ and a makefile.
 
 ## Overview
 
