@@ -2,7 +2,7 @@
 
 A C++20 library for rule-based syntactic text simplification, based on the RegenT system by Siddharthan et al.
 
-### Why does this exist?
+#### Why does this exist?
 
 Siddharthan proved it works. Nobody compiled it. Here's some C++ and a makefile.
 
