@@ -4,11 +4,9 @@ A C++20 library for rule-based syntactic text simplification, based on the Regen
 
 ### Why does this exist?
 
-Because philologists and computer scientists don't talk enough.
+The only reason this didn't exist is that the people who understood the linguistics didn't write C++, and the people who write C++ didn't read the paper.
 
-The former understand the complexity of meaning but rarely ship software. The latter ship software but treat meaning as a loss function. What tooling exists is proprietary, academic Java from decades past, or Python wrappers around Python wrappers: none of it fast, none of it embeddable, none of it intended to outlive a paper.
-
-libregent is what this work looks like when someone gets annoyed enough to fix it.
+Siddharthan understood that keeping the original word order was the key insight. We understood that keeping the original word order also applies to shipping: first, write the words. Then ship them in order.
 
 ## Overview
 
@@ -31,11 +29,10 @@ This is a pure C++ implementation with no runtime ML dependencies, with optional
 - C++20 compatible compiler (GCC 10+, Clang 12+, MSVC 2019+)
 - CMake 3.20+
 - Python 3.8+ (optional, for Python bindings)
-- nanobind (automatically fetched by CMake)
-- Catch2 (optional, for tests - automatically fetched)
-- Google Benchmark (optional, for benchmarks - automatically fetched)
+- nanobind (automatically fetched by CMake if Python bindings enabled)
+- Catch2 (automatically fetched by CMake if tests enabled)
 
-## Building
+## Build
 
 ```bash
 # Clone the repository
@@ -47,13 +44,13 @@ mkdir build && cd build
 
 # Configure
 cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
     -DREGENT_BUILD_TESTS=ON \
-    -DREGENT_BUILD_BENCHMARKS=ON \
     -DREGENT_BUILD_PYTHON=ON \
     -DREGENT_BUILD_EXAMPLES=ON
 
 # Build
-cmake --build . -j
+cmake --build . --target regent -j
 
 # Run tests
 ctest --output-on-failure
@@ -62,7 +59,7 @@ ctest --output-on-failure
 sudo cmake --install .
 ```
 
-## Quick start (C++)
+## Quickstart (C++)
 
 ```cpp
 #include <regent/regent.h>
@@ -99,7 +96,7 @@ int main() {
 }
 ```
 
-## Quick start (Python)
+## Quickstart (Python)
 
 ```python
 import regent
@@ -128,7 +125,7 @@ print(f"Simplified: {result.text}")
 print(f"Transforms: {result.transforms_applied}")
 ```
 
-## Configuration options
+## Config
 
 ```cpp
 regent::Config config;
@@ -150,7 +147,7 @@ config.min_sentence_length = 5;
 config.anaphora_level = regent::Config::AnaphoraLevel::LocalCoherence;  // Recommended
 ```
 
-## Project structure
+## Structure
 
 ```
 libregent/
@@ -173,7 +170,6 @@ libregent/
 ├── src/                    # Implementation files
 ├── python/                 # Python bindings
 ├── tests/                  # Unit and integration tests
-├── benchmarks/             # Performance benchmarks
 └── examples/               # Example programs
 ```
 
@@ -212,13 +208,6 @@ The system uses a three-stage pipeline:
 4. Linearise final text
 ```
 
-## Performance
-
-- Sentence length reduction: ~40% average (e.g. 25 words -> 15 words)
-- Readability improvement: Flesch Reading Ease typically increases by 10-15 points
-- Accuracy: ~88% grammatical and meaning-preserving (gen-light with 50-best parses)
-- Throughput: ~1000 sentences per second, per thread, on modern CPU
-
 ## Testing
 
 ```bash
@@ -230,9 +219,6 @@ ctest --output-on-failure
 ./tests/test_dep_graph
 ./tests/test_rules
 ./tests/test_integration
-
-# Run benchmarks
-./benchmarks/bench_simplifier
 ```
 
 ## Citation

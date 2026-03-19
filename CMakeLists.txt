@@ -5,9 +5,13 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Default to Release build if not specified
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
 # Options
 option(REGENT_BUILD_TESTS "Build tests" ON)
-option(REGENT_BUILD_BENCHMARKS "Build benchmarks" ON)
 option(REGENT_BUILD_PYTHON "Build Python bindings" ON)
 option(REGENT_BUILD_EXAMPLES "Build example programs" ON)
 option(REGENT_WITH_UDPIPE "Build with UDPipe for self-contained parsing" OFF)
@@ -73,7 +77,7 @@ if(REGENT_BUILD_PYTHON)
     )
     FetchContent_MakeAvailable(nanobind)
 
-    nanobind_add_module(_regent python/bindings.cpp)
+    nanobind_add_module(_regent python/pyregent.cpp)
     target_link_libraries(_regent PRIVATE regent)
 
     install(TARGETS _regent LIBRARY DESTINATION .)
@@ -104,24 +108,6 @@ if(REGENT_BUILD_TESTS)
     endif()
 
     add_subdirectory(tests)
-endif()
-
-# Benchmarks
-if(REGENT_BUILD_BENCHMARKS)
-    # Try to find or fetch Google Benchmark
-    find_package(benchmark QUIET)
-    if(NOT benchmark_FOUND)
-        include(FetchContent)
-        set(BENCHMARK_ENABLE_TESTING OFF)
-        FetchContent_Declare(
-            benchmark
-            GIT_REPOSITORY https://github.com/google/benchmark.git
-            GIT_TAG v1.8.3
-        )
-        FetchContent_MakeAvailable(benchmark)
-    endif()
-
-    add_subdirectory(benchmarks)
 endif()
 
 # Installation
