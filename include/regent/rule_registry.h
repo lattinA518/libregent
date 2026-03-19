@@ -38,11 +38,8 @@ public:
     /// Get clausal complement rules
     [[nodiscard]] static std::vector<Rule> get_clausal_complement_rules();
 
-    /// Get NP modification rules
-    [[nodiscard]] static std::vector<Rule> get_np_modification_rules();
-
-    /// Get comparative/superlative rules
-    [[nodiscard]] static std::vector<Rule> get_comparative_rules();
+    /// Get complex lexico-syntactic reformulation rules
+    [[nodiscard]] static std::vector<Rule> get_complex_lexico_syntactic_rules();
 };
 
 }  // namespace regent

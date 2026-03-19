@@ -4,9 +4,7 @@ A C++20 library for rule-based syntactic text simplification, based on the Regen
 
 ### Why does this exist?
 
-The only reason this didn't exist is that the people who understood the linguistics didn't write C++, and the people who write C++ didn't read the paper.
-
-Siddharthan understood that keeping the original word order was the key insight. We understood that keeping the original word order also applies to shipping: first, write the words. Then ship them in order.
+Siddharthan proved it works. Nobody compiled it. Here's some C++ and a makefile.
 
 ## Overview
 
@@ -16,7 +14,7 @@ This is a pure C++ implementation with no runtime ML dependencies, with optional
 
 ## Features
 
-- 60+ transformation rules covering coordination, subordination, relative clauses, apposition, passive voice, and complex lexico-syntactic reformulations
+- 63 transformation rules covering coordination, subordination, relative clauses, apposition, passive voice, participial clauses, infinitival clauses, clausal complements, and complex lexico-syntactic reformulations
 - CSP-based sentence ordering algorithm that preserves conjunctive cohesion
 - Intelligent determiner choice and noun phrase generation
 - Anaphoric post-processing to fix broken pronominal links after restructuring
@@ -125,6 +123,72 @@ print(f"Simplified: {result.text}")
 print(f"Transforms: {result.transforms_applied}")
 ```
 
+## Usage (CLI)
+
+The `regent-cli` tool reads CoNLL-U formatted input and writes simplified text to stdout.
+
+### Basic usage
+
+```bash
+# From stdin
+cat input.conllu | regent-cli
+
+# From file
+regent-cli -i input.conllu
+
+# To file
+regent-cli -i input.conllu -o output.txt
+
+# With statistics (to stderr)
+cat input.conllu | regent-cli --stats
+```
+
+### Examples
+
+```bash
+# Simple pipe
+echo "1	The	the	DET	DT	_	2	det	_	_
+2	cat	cat	NOUN	NN	_	3	nsubj	_	_
+3	slept	sleep	VERB	VBD	_	0	root	_	_
+4	because	because	SCONJ	IN	_	7	mark	_	_
+5	it	it	PRON	PRP	_	7	nsubj	_	_
+6	was	be	AUX	VBD	_	7	cop	_	_
+7	tired	tired	ADJ	JJ	_	3	advcl	_	_
+8	.	.	PUNCT	.	_	3	punct	_	_" | regent-cli
+
+# Output: It was tired. So, the cat slept.
+
+# Disable specific transformations
+regent-cli -i input.conllu --no-passive --no-coord
+
+# Show transformation statistics
+regent-cli -i input.conllu --stats
+# Statistics:
+#   Input sentences:  1
+#   Output sentences: 2
+#   Transforms:       1
+#   Avg length:       3.5 tokens
+
+# Chain with other tools
+cat corpus.conllu | regent-cli | wc -l
+```
+
+### Options
+
+```
+-i, --input FILE        Input file (CoNLL-U format)
+-o, --output FILE       Output file (default: stdout)
+--min-length N          Minimum sentence length (default: 5)
+--no-passive            Disable passive voice conversion
+--no-relcl              Disable relative clause simplification
+--no-appos              Disable apposition simplification
+--no-coord              Disable coordination simplification
+--no-subord             Disable subordination simplification
+--anaphora LEVEL        Anaphora level: cohesion, coherence, local (default: local)
+--stats                 Print statistics to stderr
+-h, --help              Show help message
+```
+
 ## Config
 
 ```cpp
@@ -175,14 +239,17 @@ libregent/
 
 ## Rule categories
 
-The library implements 63+ transformation rules across six categories:
+The library implements 63 transformation rules across nine categories:
 
-1. Coordination (~10 rules): `and`, `but`, `or`, `yet`, semicolons, VP coordination
-2. Subordination (~15 rules): `because`, `although`, `when`, `while`, `if`, `unless`, etc.
-3. Relative clauses (~8 rules): restrictive/non-restrictive, reduced, infinitival
-4. Apposition (~5 rules): restrictive/non-restrictive, titles
-5. Passive to active (~5 rules): simple, modal, perfect, ditransitive variants
-6. Complex lexico-syntactic (~7 rules): nominalisation unpacking, causality reformulation
+1. Coordination (12 rules): Clausal coordination (`and`, `but`, `or`, `yet`, `so`, `nor`, semicolons) and VP coordination with shared subjects
+2. Subordination (16 rules): `because`, `although`, `though`, `when`, `while`, `if`, `unless`, `after`, `before`, `since`, `as`, `so that`, `in order to`, `whereas`, `until`, `however`
+3. Relative clauses (8 rules): restrictive/non-restrictive, reduced, infinitival; handles `who`, `which`, `that`, `whom`, `whose`
+4. Apposition (8 rules): restrictive/non-restrictive, titles, roles, parenthetical, name descriptions, locations
+5. Passive to active (5 rules): simple, get-passive, modal, adjectival, agentless variants
+6. Participial clauses (2 rules): present and past participial clauses
+7. Infinitival clauses (2 rules): purpose and result infinitives
+8. Clausal complements (3 rules): `that`-clauses, clausal subjects, parataxis
+9. Complex lexico-syntactic (7 rules): nominalisation unpacking, causality reformulation, compound sentence splitting, negative copula rewriting, modifier chain splitting
 
 ## Algorithm
 

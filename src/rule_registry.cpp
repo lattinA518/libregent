@@ -114,6 +114,98 @@ std::vector<Rule> RuleRegistry::get_coordination_rules() {
         rules.push_back(std::move(rule));
     }
 
+    // Rule: vp_coord_and - VP coordination with "and" (shared subject)
+    {
+        Rule rule("vp_coord_and", "coordination", Relation::And, 55);
+
+        // CONTEXT: conj(??X0, ??X1) where ??X0 and ??X1 are verbs sharing a subject
+        rule.context.push_back({"conj", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"cc", "??X0", "??X2", std::nullopt, std::nullopt, "and"});
+        rule.context.push_back({"nsubj", "??X0", "??X3", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions.push_back({"conj", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions.push_back({"cc", "??X0", "??X2", std::nullopt, std::nullopt, std::nullopt});
+
+        // INSERT: duplicate subject for ??X1
+        rule.insertions.push_back({"nsubj", "??X1", "??X3", std::nullopt, std::nullopt, std::nullopt});
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        rule.cue_word_template = "And ";
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: vp_coord_but - VP coordination with "but" (shared subject)
+    {
+        Rule rule("vp_coord_but", "coordination", Relation::Concession, 55);
+
+        rule.context.push_back({"conj", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"cc", "??X0", "??X2", std::nullopt, std::nullopt, "but"});
+        rule.context.push_back({"nsubj", "??X0", "??X3", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions.push_back({"conj", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions.push_back({"cc", "??X0", "??X2", std::nullopt, std::nullopt, std::nullopt});
+
+        rule.insertions.push_back({"nsubj", "??X1", "??X3", std::nullopt, std::nullopt, std::nullopt});
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        rule.cue_word_template = "But, ";
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: vp_coord_or - VP coordination with "or" (shared subject)
+    {
+        Rule rule("vp_coord_or", "coordination", Relation::AntiConditional, 55);
+
+        rule.context.push_back({"conj", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"cc", "??X0", "??X2", std::nullopt, std::nullopt, "or"});
+        rule.context.push_back({"nsubj", "??X0", "??X3", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions.push_back({"conj", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions.push_back({"cc", "??X0", "??X2", std::nullopt, std::nullopt, std::nullopt});
+
+        rule.insertions.push_back({"nsubj", "??X1", "??X3", std::nullopt, std::nullopt, std::nullopt});
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        rule.cue_word_template = "Or, ";
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: vp_coord_yet - VP coordination with "yet" (shared subject)
+    {
+        Rule rule("vp_coord_yet", "coordination", Relation::Concession, 55);
+
+        rule.context.push_back({"conj", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"cc", "??X0", "??X2", std::nullopt, std::nullopt, "yet"});
+        rule.context.push_back({"nsubj", "??X0", "??X3", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions.push_back({"conj", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions.push_back({"cc", "??X0", "??X2", std::nullopt, std::nullopt, std::nullopt});
+
+        rule.insertions.push_back({"nsubj", "??X1", "??X3", std::nullopt, std::nullopt, std::nullopt});
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        rule.cue_word_template = "Yet, ";
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: vp_coord_nor - VP coordination with "nor" (shared subject)
+    {
+        Rule rule("vp_coord_nor", "coordination", Relation::And, 55);
+
+        rule.context.push_back({"conj", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"cc", "??X0", "??X2", std::nullopt, std::nullopt, "nor"});
+        rule.context.push_back({"nsubj", "??X0", "??X3", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions.push_back({"conj", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions.push_back({"cc", "??X0", "??X2", std::nullopt, std::nullopt, std::nullopt});
+
+        rule.insertions.push_back({"nsubj", "??X1", "??X3", std::nullopt, std::nullopt, std::nullopt});
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        rule.cue_word_template = "Nor ";
+
+        rules.push_back(std::move(rule));
+    }
+
     return rules;
 }
 
@@ -272,51 +364,6 @@ std::vector<Rule> RuleRegistry::get_subordination_rules() {
         rules.push_back(std::move(rule));
     }
 
-    // Rule: sub_even_though - Subordination with "even"
-    {
-        Rule rule("sub_even_though", "subordination", Relation::Concession, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "even"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "But, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: sub_whereas - Subordination with "whereas"
-    {
-        Rule rule("sub_whereas", "subordination", Relation::Concession, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "whereas"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "But, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: sub_until - Subordination with "until"
-    {
-        Rule rule("sub_until", "subordination", Relation::Before, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "until"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "Before that, ";
-
-        rules.push_back(std::move(rule));
-    }
-
     // Rule: sub_as - Subordination with "as" (temporal/causal)
     {
         Rule rule("sub_as", "subordination", Relation::When, 60);
@@ -328,141 +375,6 @@ std::vector<Rule> RuleRegistry::get_subordination_rules() {
         rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
 
         rule.cue_word_template = "At that time, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: sub_once - Subordination with "once"
-    {
-        Rule rule("sub_once", "subordination", Relation::After, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "once"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "After that, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: sub_whenever - Subordination with "whenever"
-    {
-        Rule rule("sub_whenever", "subordination", Relation::When, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "whenever"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "This happens when ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: sub_wherever - Subordination with "wherever"
-    {
-        Rule rule("sub_wherever", "subordination", Relation::And, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "wherever"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "In that place, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: sub_in_case - Subordination with "in case"
-    {
-        Rule rule("sub_in_case", "subordination", Relation::If, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "case"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "If this happens, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: sub_provided - Subordination with "provided"
-    {
-        Rule rule("sub_provided", "subordination", Relation::If, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "provided"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "If this is true, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: sub_supposing - Subordination with "supposing"
-    {
-        Rule rule("sub_supposing", "subordination", Relation::If, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "supposing"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "In that case, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: sub_now_that - Subordination with "now"
-    {
-        Rule rule("sub_now_that", "subordination", Relation::Cause, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "now"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "So, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: sub_given - Subordination with "given"
-    {
-        Rule rule("sub_given", "subordination", Relation::Cause, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "given"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "Because of this, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: sub_considering - Subordination with "considering"
-    {
-        Rule rule("sub_considering", "subordination", Relation::Cause, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "considering"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "Because of this, ";
 
         rules.push_back(std::move(rule));
     }
@@ -497,27 +409,12 @@ std::vector<Rule> RuleRegistry::get_subordination_rules() {
         rules.push_back(std::move(rule));
     }
 
-    // Rule: sub_lest - Subordination with "lest"
+    // Rule: sub_whereas - Subordination with "whereas"
     {
-        Rule rule("sub_lest", "subordination", Relation::SoThat, 60);
+        Rule rule("sub_whereas", "subordination", Relation::Concession, 60);
 
         rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "lest"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "This prevents ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: sub_except - Subordination with "except"
-    {
-        Rule rule("sub_except", "subordination", Relation::Concession, 60);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "except"});
+        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "whereas"});
         rule.deletions = rule.context;
 
         rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
@@ -527,17 +424,32 @@ std::vector<Rule> RuleRegistry::get_subordination_rules() {
         rules.push_back(std::move(rule));
     }
 
-    // Rule: sub_in_that - Subordination with "in" (manner)
+    // Rule: sub_until - Subordination with "until"
     {
-        Rule rule("sub_in_that", "subordination", Relation::Elaboration, 60);
+        Rule rule("sub_until", "subordination", Relation::Before, 60);
 
         rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "in"});
+        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "until"});
         rule.deletions = rule.context;
 
         rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
 
-        rule.cue_word_template = "Specifically, ";
+        rule.cue_word_template = "Until then, ";
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: sub_however - Subordination with "however"
+    {
+        Rule rule("sub_however", "subordination", Relation::Concession, 60);
+
+        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "however"});
+        rule.deletions = rule.context;
+
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        rule.cue_word_template = "But, ";
 
         rules.push_back(std::move(rule));
     }
@@ -714,9 +626,172 @@ std::vector<Rule> RuleRegistry::get_apposition_rules() {
         rule.context.push_back({"appos", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
         rule.deletions = rule.context;
 
-        // INSERT: nsubj(??COP, ??X0) + root(ROOT, ??X1)
-        // Note: ??COP would need to be a newly created copular token
+        // INSERT: Create copular sentence "X is Y"
         rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        // Extra condition: must have commas (non-restrictive)
+        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
+            auto it = b.vars.find("??X1");
+            if (it == b.vars.end()) return false;
+            // TODO: Check for commas around appositive
+            (void)g;
+            return true;
+        };
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: appos_nonrestr_parenthetical - Parenthetical apposition
+    {
+        Rule rule("appos_nonrestr_parenthetical", "apposition", Relation::Elaboration, 70);
+
+        rule.context.push_back({"appos", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions = rule.context;
+
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        // Extra condition: check for parentheses
+        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
+            auto it = b.vars.find("??X1");
+            if (it == b.vars.end()) return false;
+            // TODO: Check for parentheses around appositive
+            (void)g;
+            return false;  // Disabled until parenthesis detection is implemented
+        };
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: appos_nonrestr_name_desc - Name with description apposition
+    {
+        Rule rule("appos_nonrestr_name_desc", "apposition", Relation::Elaboration, 70);
+
+        rule.context.push_back({"appos", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions = rule.context;
+
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        // Extra condition: ??X0 is a proper noun
+        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
+            auto it = b.vars.find("??X0");
+            if (it == b.vars.end()) return false;
+            const Token* tok = g.sentence().token(it->second);
+            return tok && (tok->upos == "PROPN");
+        };
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: appos_nonrestr_title_post - Post-nominal title apposition
+    {
+        Rule rule("appos_nonrestr_title_post", "apposition", Relation::Elaboration, 70);
+
+        rule.context.push_back({"appos", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions = rule.context;
+
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        // Extra condition: ??X1 contains title keywords (director, president, CEO, etc.)
+        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
+            auto it = b.vars.find("??X1");
+            if (it == b.vars.end()) return false;
+            const Token* tok = g.sentence().token(it->second);
+            if (!tok) return false;
+            const std::string& lemma = tok->lemma;
+            return (lemma == "director" || lemma == "president" || lemma == "CEO" ||
+                    lemma == "manager" || lemma == "chairman" || lemma == "professor");
+        };
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: appos_nonrestr_location - Location apposition
+    {
+        Rule rule("appos_nonrestr_location", "apposition", Relation::Elaboration, 70);
+
+        rule.context.push_back({"appos", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions = rule.context;
+
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        // Extra condition: ??X1 is a location (proper noun with specific NER type)
+        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
+            auto it0 = b.vars.find("??X0");
+            auto it1 = b.vars.find("??X1");
+            if (it0 == b.vars.end() || it1 == b.vars.end()) return false;
+            const Token* tok0 = g.sentence().token(it0->second);
+            const Token* tok1 = g.sentence().token(it1->second);
+            return tok0 && tok1 && tok0->upos == "PROPN" && tok1->upos == "PROPN";
+        };
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: appos_restrictive - Restrictive apposition (no commas)
+    {
+        Rule rule("appos_restrictive", "apposition", Relation::Identification, 70);
+
+        rule.context.push_back({"appos", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions = rule.context;
+
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        // Extra condition: must NOT have commas (restrictive)
+        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
+            auto it = b.vars.find("??X1");
+            if (it == b.vars.end()) return false;
+            // TODO: Check for absence of commas
+            (void)g;
+            return false;  // Disabled until comma detection is implemented
+        };
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: appos_restrictive_title - Restrictive title apposition ("President Biden")
+    {
+        Rule rule("appos_restrictive_title", "apposition", Relation::Identification, 70);
+
+        rule.context.push_back({"appos", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions = rule.context;
+
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        // Extra condition: ??X0 is a title word
+        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
+            auto it = b.vars.find("??X0");
+            if (it == b.vars.end()) return false;
+            const Token* tok = g.sentence().token(it->second);
+            if (!tok) return false;
+            const std::string& lemma = tok->lemma;
+            return (lemma == "president" || lemma == "king" || lemma == "queen" ||
+                    lemma == "doctor" || lemma == "professor" || lemma == "mr" ||
+                    lemma == "ms" || lemma == "dr" || lemma == "sir");
+        };
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: appos_restrictive_role - Restrictive role apposition ("CEO Mark Zuckerberg")
+    {
+        Rule rule("appos_restrictive_role", "apposition", Relation::Identification, 70);
+
+        rule.context.push_back({"appos", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions = rule.context;
+
+        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
+
+        // Extra condition: ??X0 is a role/job title
+        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
+            auto it = b.vars.find("??X0");
+            if (it == b.vars.end()) return false;
+            const Token* tok = g.sentence().token(it->second);
+            if (!tok) return false;
+            const std::string& lemma = tok->lemma;
+            return (lemma == "CEO" || lemma == "CTO" || lemma == "CFO" ||
+                    lemma == "director" || lemma == "manager" || lemma == "chairman" ||
+                    lemma == "founder" || lemma == "leader");
+        };
 
         rules.push_back(std::move(rule));
     }
@@ -882,200 +957,6 @@ std::vector<Rule> RuleRegistry::get_infinitival_rules() {
     return rules;
 }
 
-std::vector<Rule> RuleRegistry::get_np_modification_rules() {
-    std::vector<Rule> rules;
-
-    // Rule: nmod_prep - Prepositional phrase modification
-    {
-        Rule rule("nmod_prep", "np_modification", Relation::Elaboration, 75);
-
-        rule.context.push_back({"nmod", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X0", std::nullopt, std::nullopt, std::nullopt});
-
-        // Create separate sentence for modifier
-        rule.cue_word_template = "This is ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: compound_noun - Noun compound
-    {
-        Rule rule("compound_noun", "np_modification", Relation::Elaboration, 75);
-
-        rule.context.push_back({"compound", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.deletions = rule.context;
-
-        // Split "X Y" into "X. It is Y."
-        rule.insertions.push_back({"root", "ROOT", "??X0", std::nullopt, std::nullopt, std::nullopt});
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: amod_complex - Complex adjectival modification
-    {
-        Rule rule("amod_complex", "np_modification", Relation::Elaboration, 75);
-
-        rule.context.push_back({"amod", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.deletions = rule.context;
-
-        // Only split if adjective has its own modifiers
-        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
-            auto it = b.vars.find("??X1");
-            if (it == b.vars.end()) return false;
-            // Check if adjective has dependents (advmod, etc.)
-            auto deps = g.dependents_of(it->second);
-            return deps.size() > 0;
-        };
-
-        rule.insertions.push_back({"root", "ROOT", "??X0", std::nullopt, std::nullopt, std::nullopt});
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: nummod_complex - Complex numeral modification
-    {
-        Rule rule("nummod_complex", "np_modification", Relation::Elaboration, 75);
-
-        rule.context.push_back({"nummod", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.deletions = rule.context;
-
-        // Only split if nummod has additional structure
-        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
-            auto it = b.vars.find("??X1");
-            if (it == b.vars.end()) return false;
-            auto deps = g.dependents_of(it->second);
-            return deps.size() > 0;  // Has compound number or modifier
-        };
-
-        rule.insertions.push_back({"root", "ROOT", "??X0", std::nullopt, std::nullopt, std::nullopt});
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: det_complex - Complex determiner phrase
-    {
-        Rule rule("det_complex", "np_modification", Relation::Elaboration, 75);
-
-        rule.context.push_back({"det:predet", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X0", std::nullopt, std::nullopt, std::nullopt});
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: nmod_poss - Possessive modification
-    {
-        Rule rule("nmod_poss", "np_modification", Relation::Elaboration, 75);
-
-        rule.context.push_back({"nmod:poss", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X0", std::nullopt, std::nullopt, std::nullopt});
-
-        // Create "X belongs to Y" type sentence
-        rule.cue_word_template = "This belongs to ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: nmod_tmod - Temporal modification
-    {
-        Rule rule("nmod_tmod", "np_modification", Relation::When, 75);
-
-        rule.context.push_back({"nmod:tmod", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X0", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "This happened ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    return rules;
-}
-
-std::vector<Rule> RuleRegistry::get_comparative_rules() {
-    std::vector<Rule> rules;
-
-    // Rule: comparative_than - "more X than Y"
-    {
-        Rule rule("comparative_than", "comparative", Relation::Concession, 75);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "than"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "In contrast, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: comparative_as - "as X as Y"
-    {
-        Rule rule("comparative_as", "comparative", Relation::And, 75);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"mark", "??X1", "??X2", std::nullopt, std::nullopt, "as"});
-        rule.deletions = rule.context;
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "Similarly, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: superlative - Superlative with "of/in"
-    {
-        Rule rule("superlative", "comparative", Relation::Elaboration, 75);
-
-        rule.context.push_back({"nmod", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.context.push_back({"case", "??X1", "??X2", std::nullopt, std::nullopt, std::nullopt});
-        rule.deletions = rule.context;
-
-        // Only for superlatives
-        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
-            auto it = b.vars.find("??X0");
-            if (it == b.vars.end()) return false;
-            const Token* tok = g.sentence().token(it->second);
-            return tok && (tok->xpos == "JJS" || tok->xpos == "RBS");  // Superlative
-        };
-
-        rule.insertions.push_back({"root", "ROOT", "??X0", std::nullopt, std::nullopt, std::nullopt});
-
-        rules.push_back(std::move(rule));
-    }
-
-    // Rule: comparative_clause - "the more X, the more Y"
-    {
-        Rule rule("comparative_clause", "comparative", Relation::Result, 75);
-
-        rule.context.push_back({"advcl", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
-        rule.deletions = rule.context;
-
-        // Check for correlative comparative structure
-        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
-            (void)g; (void)b;
-            // TODO: Check for "the" + comparative pattern
-            return false;  // Disabled for now
-        };
-
-        rule.insertions.push_back({"root", "ROOT", "??X1", std::nullopt, std::nullopt, std::nullopt});
-
-        rule.cue_word_template = "Because of this, ";
-
-        rules.push_back(std::move(rule));
-    }
-
-    return rules;
-}
-
 std::vector<Rule> RuleRegistry::get_clausal_complement_rules() {
     std::vector<Rule> rules;
 
@@ -1118,6 +999,126 @@ std::vector<Rule> RuleRegistry::get_clausal_complement_rules() {
     return rules;
 }
 
+std::vector<Rule> RuleRegistry::get_complex_lexico_syntactic_rules() {
+    std::vector<Rule> rules;
+
+    // Rule: nominalisation_of - Unpack "destruction of X"
+    {
+        Rule rule("nominalisation_of", "complex_lexico_syntactic", Relation::And, 75);
+
+        // Pattern: "the destruction of the city"
+        rule.context.push_back({"nmod", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"case", "??X1", "??X2", std::nullopt, std::nullopt, "of"});
+        rule.deletions = rule.context;
+
+        // TODO: Convert nominalization to verb form
+        // "destruction" -> "destroy", "creation" -> "create", etc.
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: nominalisation_by - Unpack "destruction of X by Y"
+    {
+        Rule rule("nominalisation_by", "complex_lexico_syntactic", Relation::And, 75);
+
+        // Pattern: "the destruction of the city by the army"
+        rule.context.push_back({"nmod", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"case", "??X1", "??X2", std::nullopt, std::nullopt, "of"});
+        rule.context.push_back({"nmod", "??X0", "??X3", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"case", "??X3", "??X4", std::nullopt, std::nullopt, "by"});
+        rule.deletions = rule.context;
+
+        // TODO: Convert to "Y destroyed X"
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: causality_cause_of - Reformulate "cause of X"
+    {
+        Rule rule("causality_cause_of", "complex_lexico_syntactic", Relation::Cause, 75);
+
+        // Pattern: "The cause of the explosion was X"
+        rule.context.push_back({"nmod", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"case", "??X1", "??X2", std::nullopt, std::nullopt, "of"});
+        rule.deletions = rule.context;
+
+        // Extra condition: ??X0.lemma == "cause"
+        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
+            auto it = b.vars.find("??X0");
+            if (it == b.vars.end()) return false;
+            const Token* tok = g.sentence().token(it->second);
+            return tok && (tok->lemma == "cause" || tok->lemma == "reason");
+        };
+
+        // TODO: Reformulate to "X occurred because of Y"
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: result_of - Reformulate "result of X"
+    {
+        Rule rule("result_of", "complex_lexico_syntactic", Relation::Result, 75);
+
+        rule.context.push_back({"nmod", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"case", "??X1", "??X2", std::nullopt, std::nullopt, "of"});
+        rule.deletions = rule.context;
+
+        // Extra condition: ??X0.lemma == "result"
+        rule.extra_condition = [](const DepGraph& g, const Bindings& b) -> bool {
+            auto it = b.vars.find("??X0");
+            if (it == b.vars.end()) return false;
+            const Token* tok = g.sentence().token(it->second);
+            return tok && (tok->lemma == "result" || tok->lemma == "consequence");
+        };
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: split_compound_sentence - Split very long compound sentences
+    {
+        Rule rule("split_compound_sentence", "complex_lexico_syntactic", Relation::And, 75);
+
+        // Pattern: Multiple conj relations in a chain
+        rule.context.push_back({"conj", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"conj", "??X1", "??X2", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions = rule.context;
+
+        // TODO: Split into separate sentences
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: rewrite_negative_copula - Rewrite "is not" constructions
+    {
+        Rule rule("rewrite_negative_copula", "complex_lexico_syntactic", Relation::And, 75);
+
+        // Pattern: "X is not Y" where Y is complex
+        rule.context.push_back({"cop", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"advmod", "??X0", "??X2", std::nullopt, std::nullopt, "not"});
+        rule.deletions = rule.context;
+
+        // TODO: Simplify negative constructions
+
+        rules.push_back(std::move(rule));
+    }
+
+    // Rule: split_long_nmod_chain - Split long modifier chains
+    {
+        Rule rule("split_long_nmod_chain", "complex_lexico_syntactic", Relation::Elaboration, 75);
+
+        // Pattern: Multiple nmod relations on the same head
+        rule.context.push_back({"nmod", "??X0", "??X1", std::nullopt, std::nullopt, std::nullopt});
+        rule.context.push_back({"nmod", "??X0", "??X2", std::nullopt, std::nullopt, std::nullopt});
+        rule.deletions = rule.context;
+
+        // TODO: Split into separate sentences
+
+        rules.push_back(std::move(rule));
+    }
+
+    return rules;
+}
+
 std::vector<Rule> RuleRegistry::get_all_rules() {
     std::vector<Rule> all_rules;
 
@@ -1129,13 +1130,12 @@ std::vector<Rule> RuleRegistry::get_all_rules() {
     auto participial = get_participial_rules();
     auto infinitival = get_infinitival_rules();
     auto ccomp = get_clausal_complement_rules();
-    auto np_mod = get_np_modification_rules();
-    auto comparative = get_comparative_rules();
+    auto complex = get_complex_lexico_syntactic_rules();
 
     // Reserve space to avoid reallocations
     size_t total_size = coord.size() + subord.size() + relcl.size() + appos.size() +
                        passive.size() + participial.size() + infinitival.size() +
-                       ccomp.size() + np_mod.size() + comparative.size();
+                       ccomp.size() + complex.size();
     all_rules.reserve(total_size);
 
     all_rules.insert(all_rules.end(), coord.begin(), coord.end());
@@ -1146,8 +1146,7 @@ std::vector<Rule> RuleRegistry::get_all_rules() {
     all_rules.insert(all_rules.end(), participial.begin(), participial.end());
     all_rules.insert(all_rules.end(), infinitival.begin(), infinitival.end());
     all_rules.insert(all_rules.end(), ccomp.begin(), ccomp.end());
-    all_rules.insert(all_rules.end(), np_mod.begin(), np_mod.end());
-    all_rules.insert(all_rules.end(), comparative.begin(), comparative.end());
+    all_rules.insert(all_rules.end(), complex.begin(), complex.end());
 
     // Sort by priority (lower number = higher priority)
     std::sort(all_rules.begin(), all_rules.end(),
