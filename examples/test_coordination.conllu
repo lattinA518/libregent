@@ -1,0 +1,11 @@
+# Example: Coordination with "and"
+# Input: The cat sat and the dog barked.
+1	The	the	DET	DT	Definite=Def|PronType=Art	2	det	_	_
+2	cat	cat	NOUN	NN	Number=Sing	3	nsubj	_	_
+3	sat	sit	VERB	VBD	Tense=Past|VerbForm=Fin	0	root	_	_
+4	and	and	CCONJ	CC	_	7	cc	_	_
+5	the	the	DET	DT	Definite=Def|PronType=Art	6	det	_	_
+6	dog	dog	NOUN	NN	Number=Sing	7	nsubj	_	_
+7	barked	bark	VERB	VBD	Tense=Past|VerbForm=Fin	3	conj	_	SpaceAfter=No
+8	.	.	PUNCT	.	_	3	punct	_	_
+

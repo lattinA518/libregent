@@ -1,0 +1,11 @@
+# Example: Subordination with "because"
+# Input: The cat slept because it was tired.
+1	The	the	DET	DT	Definite=Def|PronType=Art	2	det	_	_
+2	cat	cat	NOUN	NN	Number=Sing	3	nsubj	_	_
+3	slept	sleep	VERB	VBD	Tense=Past|VerbForm=Fin	0	root	_	_
+4	because	because	SCONJ	IN	_	7	mark	_	_
+5	it	it	PRON	PRP	Case=Nom|Gender=Neut|Number=Sing	7	nsubj	_	_
+6	was	be	AUX	VBD	Mood=Ind|Number=Sing|Person=3|Tense=Past	7	cop	_	_
+7	tired	tired	ADJ	JJ	Degree=Pos	3	advcl	_	SpaceAfter=No
+8	.	.	PUNCT	.	_	3	punct	_	_
+
